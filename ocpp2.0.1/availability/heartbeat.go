@@ -18,7 +18,7 @@ type HeartbeatRequest struct {
 // This field definition of the Heartbeat response payload, sent by the CSMS to the Charging Station in response to a HeartbeatRequest.
 // In case the request was invalid, or couldn't be processed, an error will be sent instead.
 type HeartbeatResponse struct {
-	CurrentTime types.DateTime `json:"currentTime" validate:"required"`
+	CurrentTime *types.DateTime `json:"currentTime" validate:"required"`
 }
 
 // A Charging Station may send a heartbeat to let the CSMS know the Charging Station is still connected, after a configurable time interval.
@@ -53,13 +53,13 @@ func NewHeartbeatRequest() *HeartbeatRequest {
 }
 
 // Creates a new HeartbeatResponse, containing all required fields. There are no optional fields for this message.
-func NewHeartbeatResponse(currentTime types.DateTime) *HeartbeatResponse {
+func NewHeartbeatResponse(currentTime *types.DateTime) *HeartbeatResponse {
 	return &HeartbeatResponse{CurrentTime: currentTime}
 }
 
 func validateHeartbeatResponse(sl validator.StructLevel) {
 	response := sl.Current().Interface().(HeartbeatResponse)
-	if types.DateTimeIsNull(&response.CurrentTime) {
+	if types.DateTimeIsNull(response.CurrentTime) {
 		sl.ReportError(response.CurrentTime, "CurrentTime", "currentTime", "required", "")
 	}
 }
